@@ -1,0 +1,10 @@
+.bq-nav {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    background-color: #FFFF9F;
+}
+
+.bq-hide {
+    display: none;
+}

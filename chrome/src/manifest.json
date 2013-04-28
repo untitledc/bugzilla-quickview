@@ -1,0 +1,20 @@
+{
+    "name": "Bugzilla Quickview",
+    "version": "0.0.1",
+    "manifest_version": 2,
+
+    "description": "Shortcuts in view to make browsing bugzilla easier and happier",
+    "icons": {
+        "16": "resources/images/icon16.png",
+        "48": "resources/images/icon48.png",
+        "128": "resources/images/icon128.png"
+    },
+
+    "content_scripts": [
+        { 
+            "matches": ["http://bug.corp.yahoo.com/*"],
+            "js": ["scripts/content.js"],
+            "all_frames": true
+        }
+    ]
+}

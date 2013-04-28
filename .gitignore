@@ -4,3 +4,8 @@
 
 *~
 .*.swp
+
+#################
+## Chrome extension build
+#################
+chrome/target

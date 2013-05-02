@@ -84,7 +84,7 @@ function setCommentView(type, toShow) {
     }
 }
 
-function initNav() {
+function initTicketNav() {
     var navRoot = document.createElement("div");
     navRoot.className = "bq-nav";
     document.body.appendChild(navRoot);
@@ -115,7 +115,10 @@ function main() {
         }
     }
 
-    initNav();
+    if ( document.getElementById("comments-history") ) {
+        //in a created ticket
+        initTicketNav();
+    }
 }
 
 main();

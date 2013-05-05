@@ -109,15 +109,13 @@ function initTicketNav() {
 function main() {
     var commentRoot = document.getElementById("comments-history");
     if ( commentRoot != null ) {
+        //in a created ticket
+        initTicketNav();
+
         var cmts = commentRoot.getElementsByClassName("comments");
         for ( var i = 0 ; i < cmts.length ; i++ ) {
             comments.push(new Comment(cmts[i]));
         }
-    }
-
-    if ( document.getElementById("comments-history") ) {
-        //in a created ticket
-        initTicketNav();
     }
 }
 

@@ -49,8 +49,40 @@ function Comment(cmtElement) {
     }
 }
 
+/** Class Ticket */
+function Ticket(id, title) {
+    var _id = id,
+        _title = title,
+        _resolution = false;
+
+    /** get ticket id: NNNNNNN */
+    this.getId = function() {
+        return _id;
+    }
+
+    /** get ticket title */
+    this.getTitle = function() {
+        return _title;
+    }
+
+    /**
+     * Set the resolution of this ticket.
+     * Often it should be the resolution string, but might be
+     * boolean true when you know it has resolution but you don't know which.
+     */
+    this.setResolution = function(res) {
+        _resolution = res;
+    }
+
+    /** Whether this ticket has resolution or not (meaning it's 'closed' or not) */
+    this.hasResolution = function() {
+        return ( _resolution != undefined && _resolution != false );
+    }
+}
+
 // globle variables
 var comments = [];
+var blockerTickets = [];
 
 function setCommentView(type, toShow) {
     //XXX should do an index of comment type instead of checking in runtime
@@ -89,6 +121,7 @@ function initTicketNav() {
     navRoot.className = "bq-nav";
     document.body.appendChild(navRoot);
 
+    // view filter
     var navView = document.createElement("div");
     navView.className = "bq-nav-view";
     navRoot.appendChild(navView);
@@ -104,18 +137,52 @@ function initTicketNav() {
             function(e) { setCommentView("chat",e.target.checked)} );
     document.getElementById("bq-view-act").addEventListener("change",
             function(e) { setCommentView("act",e.target.checked)} );
+
+    // depend-on list
+    var navDepend = document.createElement("div");
+    navDepend.className = "bq-nav-dependon";
+    navRoot.appendChild(navDepend);
+
+    console.log(blockerTickets);
 }
 
 function main() {
     var commentRoot = document.getElementById("comments-history");
+    //in a created ticket
     if ( commentRoot != null ) {
-        //in a created ticket
-        initTicketNav();
-
+        // comments
         var cmts = commentRoot.getElementsByClassName("comments");
         for ( var i = 0 ; i < cmts.length ; i++ ) {
             comments.push(new Comment(cmts[i]));
         }
+
+        // depend-on tickets
+        var ls = document.getElementsByTagName("label");
+        for ( var i = 0 ; i < ls.length ; i ++ ) {
+            if ( ls[i].getAttribute("for") == "dependson" ) {
+                var elDts = ls[i].parentNode.nextElementSibling.children;
+                for ( var c = 0 ; c < elDts.length ; c ++ ) {
+                    var elT = elDts[c], isc = false;
+                    if ( elT.tagName == "SPAN" && elT.className == "bz_closed") {
+                        isc = true;
+                        elT = elT.children[0];
+                    }
+
+                    if ( elT.tagName == "A" ) {
+                        var t = new Ticket( elT.innerText,
+                                elT.getAttribute("title") );
+                        t.setResolution(isc);
+                        blockerTickets.push(t);
+                    }
+                    else {
+                        console.log("Can't recognize blocker "+t);
+                    }
+                }
+            }
+        }
+
+        // create navigation menu at left
+        initTicketNav();
     }
 }
 
